@@ -1,0 +1,32 @@
+version: '3'
+services:
+  mix-online-api:
+    # platform: linux/amd64
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    ports:
+      - 8080:8080
+    depends_on:
+      - mix-online-db
+    volumes:
+      - .:/app
+      - /app/tmp
+    command: air
+    networks:
+      - mix-online-network
+  mix-online-db:
+    platform: linux/amd64
+    image: postgres
+    environment:
+      POSTGRES_USER: docker
+      POSTGRES_PASSWORD: docker
+      POSTGRES_DB: my-app
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    networks:
+      - mix-online-network
+networks:
+  mix-online-network:
